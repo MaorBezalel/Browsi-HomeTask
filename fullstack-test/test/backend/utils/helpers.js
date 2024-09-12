@@ -12,11 +12,26 @@ export const addNewPublisherToDB = (nameOfNewPublisher) => {
     };
 
     try {
-        writeDataToDB([newPublisher, ...publishers]); // we first try to write to the db.json file before updating the publishers array
-        publishers.unshift(newPublisher); // since the write to the db.json file was successful, we can now update the publishers array
+        publishers.unshift(newPublisher);
+        writeDataToDB(publishers);
         return newPublisher;
     } catch (error) {
         console.error('Error adding new publisher:', error);
+        return null;
+    }
+};
+
+export const deletePublisherFromDB = (publisherName) => {
+    const publisherIndex = publishers.findIndex(
+        (existsPublisher) => existsPublisher.publisher.toLowerCase() === publisherName
+    );
+
+    try {
+        const [deletedPublisher] = publishers.splice(publisherIndex, 1);
+        writeDataToDB(publishers);
+        return deletedPublisher;
+    } catch {
+        console.error('Error deleting publisher:', error);
         return null;
     }
 };

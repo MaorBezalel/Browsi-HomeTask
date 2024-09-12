@@ -1,6 +1,6 @@
 import express from 'express';
 import { publishers } from '../server.js';
-import { addNewPublisherToDB } from '../utils/helpers.js';
+import { addNewPublisherToDB, deletePublisherFromDB } from '../utils/helpers.js';
 
 const publishersRouter = express.Router();
 
@@ -52,11 +52,17 @@ publishersRouter.delete('/:publisherName', (req, res) => {
         (existsPublisher) => existsPublisher.publisher.toLowerCase() === publisherName
     );
 
-    if (publisherIndex !== -1) {
-        const [deletedPublisher] = publishers.splice(publisherIndex, 1);
-        return res.status(201).json(deletedPublisher);
-    } else {
+    if (publisherIndex === -1) {
         return res.status(400).json({ errorMessage: 'Publisher not found' });
+    }
+
+    const deletedPublisher = deletePublisherFromDB(publisherName);
+    if (deletedPublisher) {
+        res.status(204).json({});
+    } else {
+        res.status(500).json({
+            errorMessage: 'Internal error while trying to delete a publisher. Please try again later',
+        });
     }
 });
 

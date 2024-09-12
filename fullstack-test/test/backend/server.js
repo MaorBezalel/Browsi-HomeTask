@@ -1,13 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import fs from 'fs';
 import publishersRouter from './routers/publishers.js';
 import domainsRouter from './routers/domains.js';
 import { getAllPublishersFromDB } from './utils/helpers.js';
 
 const PORT = 4300;
 const app = express();
-// const data = fs.readFileSync('./db.json', 'utf8');
 
 export const publishers = getAllPublishersFromDB();
 
