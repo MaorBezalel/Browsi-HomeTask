@@ -1,0 +1,15 @@
+<div>
+    <h1>{{ publisher.publisher }} ({{ publisher.domains.length }})</h1>
+    <hr />
+    <div class="publisher-card-container">
+        <ng-container *ngIf="publisher.domains.length > 0; else emptyCase">
+            <app-domain-card
+                *ngFor="let domain of publisher.domains"
+                [domain]="domain"
+            ></app-domain-card>
+        </ng-container>
+        <ng-template #emptyCase>
+            <p>No domains available.</p>
+        </ng-template>
+    </div>
+</div>
