@@ -17,32 +17,43 @@ export class PublishersContainerComponent implements OnInit {
     publishers: Array<Publisher> = [];
 
     ngOnInit(): void {
+        this._fetchPublishers();
+    }
+
+    addPublisher() {
+        const nameOfNewPublisher = prompt('Enter the name of the new publisher');
+        if (this._validatePublisherName(nameOfNewPublisher)) {
+            this._handleAddPublisher(nameOfNewPublisher);
+        } else {
+            alert('Invalid publisher name (must not be empty or contain only whitespace)!');
+        }
+    }
+
+    private _fetchPublishers(): void {
         this.httpService.getPublishers().subscribe({
             next: (publishers: Publisher[]) => {
                 this.publishers = publishers;
             },
             error: (error) => {
-                console.error(error);
-                alert('Failed to get publishers. Please try again later.');
+                this._handleError(error, 'Failed to get publishers. Please try again later.');
             },
         });
     }
 
-    addPublisher() {
-        const nameOfNewPublisher = prompt('Enter the name of the new publisher');
+    private _handleAddPublisher(nameOfNewPublisher: string): void {
+        this.httpService.addPublisher(nameOfNewPublisher).subscribe({
+            next: (newlyAddedPublisher: Publisher) => {
+                this.publishers.unshift(newlyAddedPublisher);
+            },
+            error: ({ error: { errorMessage } }: BackEndError) => {
+                alert(errorMessage);
+            },
+        });
+    }
 
-        if (this._validatePublisherName(nameOfNewPublisher)) {
-            this.httpService.addPublisher(nameOfNewPublisher).subscribe({
-                next: (newlyAddedPublisher: Publisher) => {
-                    this.publishers.unshift(newlyAddedPublisher);
-                },
-                error: ({ error: { errorMessage } }: BackEndError) => {
-                    alert(errorMessage);
-                },
-            });
-        } else {
-            alert('Invalid publisher name (must not be empty or contain only whitespace)!');
-        }
+    private _handleError(error: any, message: string): void {
+        console.error(error);
+        alert(message);
     }
 
     private _validatePublisherName(publisherName: string | null): publisherName is string {
