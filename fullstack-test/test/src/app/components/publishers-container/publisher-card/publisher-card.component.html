@@ -1,5 +1,13 @@
 <div>
-    <h1>{{ publisher.publisher }} ({{ publisher.domains.length }})</h1>
+    <div style="display: flex; justify-content: space-between">
+        <h1>{{ publisher.publisher }} ({{ publisher.domains.length }})</h1>
+        <button
+            style="height: 60px; width: 125px; margin-bottom: 10px"
+            (click)="onDeletePublisher()"
+        >
+            Delete publisher
+        </button>
+    </div>
     <hr />
     <div class="publisher-card-container">
         <ng-container *ngIf="publisher.domains.length > 0; else emptyCase">

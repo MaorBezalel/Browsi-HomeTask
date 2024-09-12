@@ -29,6 +29,17 @@ export class PublishersContainerComponent implements OnInit {
         }
     }
 
+    deletePublisher(publisherName: string) {
+        this.httpService.deleteOnePublisher(publisherName).subscribe({
+            next: () => {
+                this.publishers = this.publishers.filter((publisher) => publisher.publisher !== publisherName);
+            },
+            error: ({ error: { errorMessage } }: BackEndError) => {
+                alert(errorMessage);
+            },
+        });
+    }
+
     private _fetchPublishers(): void {
         this.httpService.getPublishers().subscribe({
             next: (publishers: Publisher[]) => {

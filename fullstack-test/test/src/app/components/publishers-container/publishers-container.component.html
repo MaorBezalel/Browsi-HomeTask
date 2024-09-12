@@ -1,8 +1,12 @@
 <div class="publishers-container">
     <div>
-      <button (click)="addPublisher()">Add publisher</button>
+        <button (click)="addPublisher()">Add publisher</button>
     </div>
     <div>
-        <app-publisher-card *ngFor="let publisher of publishers" [publisher]="publisher"></app-publisher-card>
+        <app-publisher-card
+            *ngFor="let publisher of publishers"
+            [publisher]="publisher"
+            (deletePublisher)="deletePublisher($event)"
+        ></app-publisher-card>
     </div>
 </div>
